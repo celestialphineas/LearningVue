@@ -11,8 +11,9 @@ function resolve (dir) {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './vue/main.js',
-    login: './vue/login-page.js'
+    app: './vue/home.js',
+    my: './vue/my.js',
+    login: './vue/login.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -63,6 +64,14 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },

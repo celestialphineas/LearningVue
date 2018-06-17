@@ -75,6 +75,16 @@ const webpackConfig = merge(baseWebpackConfig, {
       chunksSortMode: 'dependency'
     }),
     new HtmlWebpackPlugin({
+      filename: config.build.my,
+      template: 'vue/html/my.html',
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      }
+    }),
+    new HtmlWebpackPlugin({
       filename: config.build.login,
       template: 'vue/html/login.html',
       inject: true,

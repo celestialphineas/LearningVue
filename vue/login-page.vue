@@ -42,15 +42,13 @@
 </template>
 
 <script>
-import memoriaLogo from './../assets/img/memoria.png';
+import img from '@/util/img';
 
 export default {
-  name: 'LoginUI',
+  name: 'Login',
   data() {
     return {
-      img: {
-        memoriaLogo
-      },
+      img,
       loading: false,
       login: {
         email: "",
@@ -83,7 +81,7 @@ div {
   justify-content: center;
   position: relative;
   height: 100vh;
-  background-image: url('../assets/img/login-bg.jpg');
+  background-image: url('./assets/img/login-bg.jpg');
   background-size: cover;
 }
 

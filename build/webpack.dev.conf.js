@@ -26,6 +26,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     historyApiFallback: {
       rewrites: [
         { from: /login.*/, to: path.posix.join(config.dev.assetsPublicPath, 'vue/html/login.html') },
+        { from: /my.*/, to: path.posix.join(config.dev.assetsPublicPath, 'vue/html/my.html') },
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'vue/html/index.html') },
       ],
     },
@@ -57,6 +58,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       filename: 'vue/html/index.html',
       template: 'vue/html/index.html',
       chucks: ['app'],
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'vue/html/my.html',
+      template: 'vue/html/my.html',
+      chunks: ['my'],
       inject: true
     }),
     new HtmlWebpackPlugin({
