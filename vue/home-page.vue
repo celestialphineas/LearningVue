@@ -64,7 +64,6 @@ export default {
 <style scoped>
 .md-app {
   height: 100vh;
-  border: 1px solid rgba(#000, .12);
 }
 
 .md-drawer {

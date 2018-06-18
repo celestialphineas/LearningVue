@@ -1,43 +1,43 @@
 <template>
-  <div class="page-container">
-    <md-app md-waterfall md-mode="overlap">
-      <md-app-toolbar class="md-primary md-large">
-        <div class="md-toolbar-row">
-          <div class="md-toolbar-section-start">
-            <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
-              <md-icon>menu</md-icon>
-            </md-button>
+<div class="page-container">
+<md-app md-waterfall md-mode="overlap">
+  <md-app-toolbar class="md-primary md-large">
+    <div class="md-toolbar-row">
+      <div class="md-toolbar-section-start">
+        <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+          <md-icon>menu</md-icon>
+        </md-button>
 
-            <span class="md-title">my memoria</span>
-          </div>
+        <span class="md-title">my memoria</span>
+      </div>
 
-          <div class="md-toolbar-section-end">
-            <md-menu md-direction="bottom-end">
-              <md-button class="md-icon-button" md-menu-trigger>
-                <md-icon>more_vert</md-icon>
-              </md-button>
-              <md-menu-content>
-                <md-menu-item><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
-              </md-menu-content>
-            </md-menu> 
-          </div>
-        </div>
-      </md-app-toolbar>
+      <div class="md-toolbar-section-end">
+        <md-menu md-direction="bottom-end">
+          <md-button class="md-icon-button" md-menu-trigger>
+            <md-icon>more_vert</md-icon>
+          </md-button>
+          <md-menu-content>
+            <md-menu-item><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
+          </md-menu-content>
+        </md-menu> 
+      </div>
+    </div>
+  </md-app-toolbar>
 
-      <md-app-drawer :md-active.sync="menuVisible">
-        <SideNavigation/>
-      </md-app-drawer>
+  <md-app-drawer :md-active.sync="menuVisible">
+    <SideNavigation/>
+  </md-app-drawer>
 
-      <md-app-content class="md-elevation-0">
-        <md-content class="md-elevation-2">
-          <UserBox/>
-        </md-content>
-        <md-content class="md-elevation-2">
-          bbbb
-        </md-content>
-      </md-app-content>
-    </md-app>
-  </div>
+  <md-app-content class="md-elevation-0">
+    <md-content class="md-elevation-2">
+      <UserBox/>
+    </md-content>
+    <md-content class="md-elevation-2">
+      bbbb
+    </md-content>
+  </md-app-content>
+</md-app>
+</div>
 </template>
 
 <script>
@@ -54,6 +54,9 @@ export default {
   components: {
     SideNavigation,
     UserBox
+  },
+  methods: {
+    
   }
 }
 </script>
