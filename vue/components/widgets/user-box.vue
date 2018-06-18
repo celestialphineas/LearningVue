@@ -138,10 +138,9 @@ export default {
 
 .md-dialog {
   max-width: 500px;
-  width: 30%;
-  min-width: calc(100vw - 20px);
-  height: fit-content;
+  width: calc(100vw - 20px);
   max-height: 500px;
+  height: fit-content;
 }
 
 .loading-overlay {
