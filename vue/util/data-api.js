@@ -9,5 +9,9 @@ export default {
         else {
             return Axios.get(config.getApiHost('api/data/' + word));
         }
+    },
+    getRandom(int) {
+        if(typeof int !== 'number') return null;
+        return Axios.get(config.getApiHost('api/data/random/') + int);
     }
 }

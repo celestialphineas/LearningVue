@@ -5,7 +5,7 @@ import App from './home-page';
 import router from './router/home-route';
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.min.css';
-import './assets/scss/theme.scss';
+import './assets/css/theme.scss';
 
 Vue.config.productionTip = false;
 Vue.use(VueMaterial);

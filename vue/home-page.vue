@@ -4,7 +4,7 @@
       <md-app-toolbar class="md-large md-dense md-primary">
         <div class="md-toolbar-row">
           <div class="md-toolbar-section-start">
-            <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+            <md-button class="md-icon-button" @click="ui.menuVisible = !ui.menuVisible">
               <md-icon>menu</md-icon>
             </md-button>
 
@@ -23,8 +23,8 @@
           </div>
         </div>
 
-        <div class="md-toolbar-row">
-          <md-tabs class="md-primary">
+        <div class="md-toolbar-row" style="margin:0 12px;">
+          <md-tabs class="md-primary" :md-active-tab="ui.tab">
             <md-tab id="tab-todays-task" md-label="Today's task" to="/todays-task"></md-tab>
             <md-tab id="tab-discover" md-label="Discover" to="/discover"></md-tab>
             <md-tab id="tab-pinned" md-label="Pinned" to="/pinned"></md-tab>
@@ -32,11 +32,11 @@
         </div>
       </md-app-toolbar>
 
-      <md-app-drawer :md-active.sync="menuVisible">
+      <md-app-drawer :md-active.sync="ui.menuVisible">
         <SideNavigation/>
       </md-app-drawer>
 
-      <md-app-content>
+      <md-app-content style="padding-left:0;padding-right:0;">
         <transition name="component-fade" mode="out-in">
           <router-view/>
         </transition>
@@ -52,7 +52,10 @@ export default {
   name: 'App',
   data () {
     return {
-      menuVisible: false
+      ui: {
+        menuVisible: false,
+        tab: 'tab-todays-task'
+      }
     }
   },
   components: {

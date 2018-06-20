@@ -1,30 +1,84 @@
 <template>
   <div>
-		<md-card md-with-hover>
-      <md-ripple>
-        <md-card-header>
-          <div class="md-title">{{word}}</div>
-        </md-card-header>
+		<md-card md-with-hover style="cursor:auto;margin:0;z-index:1;">
+			<md-card-header>
+				<div class="md-title">{{word}}</div>
+				<div class="md-subhead" v-if="wordData.ipa">/{{wordData.ipa}}/</div>
+			</md-card-header>
 
-        <md-card-content>
-          {{wordData}}
-        </md-card-content>
+			<md-card-content>
+			</md-card-content>
+			<md-dialog :md-active.sync="ui.showDefinitionDialog" v-on:md-closed="ui.seenDefinition=true;seenDefTimes++">
+				<md-card-header>
+					<div class="md-title">{{word}}</div>
+					<div class="md-subhead">/{{wordData.ipa}}/</div>
+				</md-card-header>
+				<md-dialog-content>
+					<div class="md-subheading" v-if="wordData.en">English Definitions</div>
+					<div v-for="en in wordData.en" :key="en[0]+en[1]+en[2]">
+						<p style="margin:5px 0">
+							<span v-if="en[2]">
+								<span class="idm">
+									<span class="pos">{{en[0]}}</span>
+									{{en[1]}}
+								</span>
+								{{en[2]}}
+							</span>
+							<span v-else>
+								<span class="pos">{{en[0]}}</span>
+								{{en[1]}}
+							</span>
+						</p>
+					</div>
+					<div class="md-subheading" style="margin-top:10px" v-if="wordData.zh">Chinese Definitions</div>
+					<div v-for="zh in wordData.zh" :key="zh[0]+zh[1]+zh[2]">
+						<p style="margin:5px 0">
+							<span v-if="zh[2]">
+								<span class="idm">
+									<span class="pos">{{zh[0]}}</span>
+									{{zh[1]}}
+								</span>
+								{{zh[2]}}
+							</span>
+							<span v-else>
+								<span class="pos">{{zh[0]}}</span>
+								{{zh[1]}}
+							</span>
+						</p>
+					</div>
+				</md-dialog-content>
+				<md-dialog-actions>
+				<md-button class="md-primary" @click="ui.showDefinitionDialog=false">
+					<md-icon>done</md-icon>
+						<span>Got it</span>
+				</md-button>
+				</md-dialog-actions>
+			</md-dialog>
 
-        <md-card-actions>
-          <md-button>Action</md-button>
-          <md-button>Action</md-button>
-        </md-card-actions>
-				<div class="loading-overlay" v-if="ui.ajaxLoading">
-					<md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
-				</div>
-      </md-ripple>
+			<md-card-actions>
+				<md-button class="md-icon-button md-primary" style="position:absolute;right:0;top:0;margin:8px">
+					<md-icon>add_location</md-icon>
+				</md-button>
+				<md-button @click="ui.showDefinitionDialog=true">
+					<md-icon>sentiment_dissatisfied</md-icon>
+					<span v-if="!ui.seenDefinition">Obscure</span>
+					<span v-else>Still obsecure</span>
+				</md-button>
+				<md-button class="md-primary">
+					<md-icon v-if="!ui.seenDefinition">done</md-icon>
+					<md-icon v-else>sentiment_very_satisfied</md-icon>
+						<span>Familiar</span>
+				</md-button>
+			</md-card-actions>
+			<div class="loading-overlay" v-if="ui.ajaxLoading">
+				<md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
+			</div>
     </md-card>
 	</div>
 </template>
 
 <script>
 import DataApi from '@/util/data-api.js';
-import Axios from 'axios';
 
 export default {
 	name: 'TaskFlashcard',
@@ -37,8 +91,11 @@ export default {
 				pronunciation: null
 			},
 			ui: {
-				ajaxLoading: 	true
-			}
+				ajaxLoading: 	true,
+				showDefinitionDialog: false,
+				seenDefinition: false,
+			},
+			seenDefTimes: 0
 		}
 	},
 	components: {
@@ -50,9 +107,6 @@ export default {
 			promise.then((res) => {
 				this.ui.ajaxLoading = false;
 				this.wordData = res.data;
-				Axios.get(this.wordData.pronunciation).then(
-					res => console.log(res)
-				);
 			});
 		}
 	},
@@ -61,17 +115,5 @@ export default {
 </script>
 
 <style scoped>
-.loading-overlay {
-  z-index: 10;
-  top: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+@import '../../assets/css/flashcard.css';
 </style>
