@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import config from '../../config/path.api.js';
+import config from '../../config/path.api';
 
 export default {
     // Return a promise
@@ -7,7 +7,7 @@ export default {
         if(!word || typeof word !== 'string')
             return null;
         else {
-            return Axios.get(config.getApiHost('api/data/' + word));
+            return Axios.get(config.getApiHost('api/data/word/' + word));
         }
     },
     getRandom(int) {

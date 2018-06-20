@@ -1,5 +1,5 @@
 const bodyParser    = require('body-parser');
-const config        = require('../config/path.api');
+const config        = require('../config/conf.server');
 const cors          = require('cors');
 const data          = require('./data');
 const express       = require('express');
