@@ -10,11 +10,13 @@ function createUserObj(email, passMD5) {
         'md5'           : kryptos.encryptPasswordMD5(passMD5),
         validated       : false,
         course          : null,
+        courseEpoch     : 0,
         courseSeed      : 0,
         wordsDaily      : 20,
         wordsToLearn    : [],
         experience      : [],
-        pinned          : []
+        pinned          : [],
+        courseLearnt    : []
     };
 }
 
@@ -108,7 +110,7 @@ function getUserdata(email) {
         mongoClient
             .connect(config.mongoURL)
             .then((db) => {
-                var data = getCollection(db).userCollection.findOne({'email': email});
+                var data = getCollection(db).findOne({'email': email});
                 if(data) resolve(data);
                 else reject(data);
             })
