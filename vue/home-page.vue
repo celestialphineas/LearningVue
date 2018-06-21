@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="page-container">
     <md-app md-waterfall md-mode="fixed-last">
-      <md-app-toolbar class="md-large md-dense md-primary">
+      <md-app-toolbar class="md-large md-dense md-primary" style="position:fixed">
         <div class="md-toolbar-row">
           <div class="md-toolbar-section-start">
             <md-button class="md-icon-button" @click="ui.menuVisible = !ui.menuVisible">

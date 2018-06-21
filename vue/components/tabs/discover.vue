@@ -3,7 +3,7 @@
   <Waterfall
   :resizable="true">
     <WaterfallItem
-      v-for="(word, index) in words"
+      v-for="word in words"
       :width="300"
       :key="word">
       <DiscoverFlashcard :word="word" style="margin:8px;"/>
@@ -17,12 +17,15 @@ import DiscoverFlashcard from '../widgets/discover-flashcard.vue';
 import DataApi from '../../util/data-api.js';
 import {Waterfall, WaterfallItem} from 'vue2-waterfall';
 
+const count = 20;
+
 export default {
   name: 'Discover',
   data() {
     return {
-      count: 100,
+      count,
       words: [],
+      sizes: new Array(count).fill({width: 320, height: 50}),
       ui: {
         ajaxLoading: true,
         ajaxErr: false,
@@ -43,7 +46,7 @@ export default {
     } else {
       this.ui.ajaxErr = true;
     }
-  }
+  },
 }
 </script>
 

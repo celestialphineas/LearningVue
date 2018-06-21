@@ -18,13 +18,16 @@ function createUserObj(email, passMD5) {
     };
 }
 
+function getCollection(db) {
+    return db.db('memoria').collection('user');
+}
+
 mongoClient.connect(config.mongoURL, (err, db) => {
     if(err) throw err;
-    var defaultUser = createUserObj('test', kryptos.md5('test'));
+    var defaultUser = createUserObj('test@example.com', kryptos.md5('test'));
     defaultUser.name = 'test';
     defaultUser.validated = true;
-    var memoriaDB = db.db('memoria');
-    var userCollection = memoriaDB.collection('user');
+    var userCollection = getCollection(db);
     console.log('Database connected at ' + config.mongoURL);
     // Check whether the test user exists
     userCollection.find({'email':'test@example.com'}).toArray((err, res) => {
@@ -42,73 +45,81 @@ mongoClient.connect(config.mongoURL, (err, db) => {
 
 // Example call: updateUser('test@example.com', {'name': 'NewTest'});
 function updateUser(email, obj) {
-    mongoClient.connect(config.mongoURL, (err, db) => {
-        if(err) throw err;
-        var memoriaDB = db.db('memoria');
-        var userCollection = memoriaDB.collection('user');
-        userCollection.updateOne({'email': email}, {$set: obj}, (err, res) => {
-            if(err) throw err;
-            else console.log('User ' + email + ' updated ' + obj);
-            db.close();
-        });
+    return new Promise((resolve, reject) => {
+        mongoClient
+            .connect(config.mongoURL)
+            .then(db => {
+                getCollection(db)
+                    .updateOne({'email': email}, {$set: obj})
+                    .then(() => resolve(obj))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
     });
 }
 
 function insertNewUser(email, passMD5) {
-    mongoClient.connect(config.mongoURL, (err, db) => {
-        if(err) throw err;
-        var memoriaDB = db.db('memoria');
-        var userCollection = memoriaDB.collection('user');
-        userCollection.insertOne(createUserObj(email, passMD5), (err, res) => {
-            if(err) throw err;
-            else console.log('New user inserted: ' + email);
-            db.close();
-        })
+    return new Promise((resolve, reject) => {
+        mongoClient
+            .connect(config.mongoURL)
+            .then(db => {
+                getCollection(db)
+                    .insertOne(createUserObj(email, passMD5))
+                    .then(() => resolve(createUserObj(email, passMD5)))
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
     });
 }
 
-function queryUserExistence(email, iftCallback, iffCallback) {
-    mongoClient.connect(config.mongoURL, (err, db) => {
-        if(err) throw err;
-        var memoriaDB = db.db('memoria');
-        var userCollection = memoriaDB.collection('user');
-        userCollection.find({'email': email}).toArray((err, res) => {
-            if(err) throw err;
-            db.close()
-            if(res.length) iftCallback();
-            else iffCallback();
-        });
+function userExists(email) {
+    return new Promise((resolve, reject) => {
+        mongoClient
+            .connect(config.mongoURL)
+            .then(db => {
+                getCollection(db)
+                    .findOne({'email': email})
+                    .then(data => {
+                        if(!data) resolve(false);
+                        else resolve(true);
+                    })
+                    .catch(err => reject(err));
+            })
+            .catch(err => reject(err));
     });
 }
 
 function validateUser(email) {
-    mongoClient.connect(config.mongoURL, (err, db) => {
-        if(err) throw err;
-        var memoriaDB = db.db('memoria');
-        var userCollection = memoriaDB.collection('user');
-        userCollection.updateOne({'email': email}, {$set: {'validated': 'true'}}, (err, res) => {
-            if(err) throw err;
-            else console.log('User ' + email + ' updated ' + obj);
-            db.close();
-        });
-    })
+    return new Promise((resolve, reject) => {
+        mongoClient
+            .connect(config.mongoURL)
+            .then((db) => {
+                getCollection(db)
+                    .updateOne({'email': email}, {$set: {'validated': 'true'}})
+                    .then(() => resolve(email))
+                    .catch(err => reject(err))
+            })
+            .catch(err => reject(err));
+    });
 }
 
-function getUserdata(email, callback) {
-    mongoClient.connect(config.mongoURL, (err, db) => {
-        if(err) throw err;
-        var memoriaDB = db.db('memoria');
-        var userCollection = memoriaDB.collection('user');
-        userCollection.find({'email': email}).toArray((err, res) => {
-            callback(err, res);
-        });
+function getUserdata(email) {
+    return new Promise((resolve, reject) => {
+        mongoClient
+            .connect(config.mongoURL)
+            .then((db) => {
+                var data = getCollection(db).userCollection.findOne({'email': email});
+                if(data) resolve(data);
+                else reject(data);
+            })
+            .catch((err) => { throw err; });
     });
 }
 
 module.exports = {
+    userExists,
+    insertNewUser,
     updateUser,
     getUserdata,
-    insertNewUser,
     validateUser,
-    queryUserExistence,
 };

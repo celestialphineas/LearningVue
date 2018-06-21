@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="card">
 		<md-card md-with-hover style="cursor:auto;margin:0;">
 			<md-card-header>
 				<div class="md-title">{{word}}</div>
@@ -72,7 +72,6 @@ export default {
       }
     };
   },
-  components: {},
   created() {
     var promise = DataApi.getWordData(this.word);
     if (promise) {
@@ -80,7 +79,7 @@ export default {
         this.ui.ajaxLoading = false;
 				this.wordData = res.data;
 				this.$emit('data-done');
-      });
+			});
     }
   },
   props: ["word"]
