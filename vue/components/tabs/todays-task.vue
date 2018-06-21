@@ -26,12 +26,6 @@ export default {
   components: {
     TaskFlashcard,
     Waterfall, WaterfallItem
-  },
-  activated() {
-    Waterfall.render();
-  },
-  updated() {
-    Waterfall.render();
   }
 }
 </script>

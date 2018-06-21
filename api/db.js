@@ -44,7 +44,6 @@ mongoClient.connect(config.mongoURL, (err, db) => {
 function updateUser(email, obj) {
     mongoClient.connect(config.mongoURL, (err, db) => {
         if(err) throw err;
-        // else console.log('updateUser database connected');
         var memoriaDB = db.db('memoria');
         var userCollection = memoriaDB.collection('user');
         userCollection.updateOne({'email': email}, {$set: obj}, (err, res) => {
@@ -58,7 +57,6 @@ function updateUser(email, obj) {
 function insertNewUser(email, passMD5) {
     mongoClient.connect(config.mongoURL, (err, db) => {
         if(err) throw err;
-        // else console.log('insertNewUser database connected');
         var memoriaDB = db.db('memoria');
         var userCollection = memoriaDB.collection('user');
         userCollection.insertOne(createUserObj(email, passMD5), (err, res) => {
@@ -72,10 +70,10 @@ function insertNewUser(email, passMD5) {
 function queryUserExistence(email, iftCallback, iffCallback) {
     mongoClient.connect(config.mongoURL, (err, db) => {
         if(err) throw err;
-        // else console.log('queryUserExistence database connected');
         var memoriaDB = db.db('memoria');
         var userCollection = memoriaDB.collection('user');
         userCollection.find({'email': email}).toArray((err, res) => {
+            if(err) throw err;
             db.close()
             if(res.length) iftCallback();
             else iffCallback();
@@ -86,7 +84,6 @@ function queryUserExistence(email, iftCallback, iffCallback) {
 function validateUser(email) {
     mongoClient.connect(config.mongoURL, (err, db) => {
         if(err) throw err;
-        // else console.log('validateUserExistence database connected');
         var memoriaDB = db.db('memoria');
         var userCollection = memoriaDB.collection('user');
         userCollection.updateOne({'email': email}, {$set: {'validated': 'true'}}, (err, res) => {
@@ -100,11 +97,17 @@ function validateUser(email) {
 function getUserdata(email, callback) {
     mongoClient.connect(config.mongoURL, (err, db) => {
         if(err) throw err;
+        var memoriaDB = db.db('memoria');
+        var userCollection = memoriaDB.collection('user');
+        userCollection.find({'email': email}).toArray((err, res) => {
+            callback(err, res);
+        });
     });
 }
 
 module.exports = {
     updateUser,
+    getUserdata,
     insertNewUser,
     validateUser,
     queryUserExistence,

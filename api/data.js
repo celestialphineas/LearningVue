@@ -147,7 +147,7 @@ router.get('/course/:entry/:seed', (req, res) => {
 
     try {
         seed = parseInt(seed);
-    } catch {
+    } catch (e) {
         res.header('Content-Type', 'application/text').status(404).send('404 Not found: ' + seed);
         return;
     }

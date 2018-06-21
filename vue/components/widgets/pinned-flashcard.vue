@@ -1,6 +1,6 @@
 <template>
   <div>
-		<md-card md-with-hover style="cursor:auto;margin:0;z-index:1;">
+		<md-card md-with-hover style="cursor:auto;margin:0;">
 			<md-card-header>
 				<div class="md-title">{{word}}</div>
 				<div class="md-subhead" v-if="wordData.ipa">/{{wordData.ipa}}/</div>
@@ -78,7 +78,8 @@ export default {
     if (promise) {
       promise.then(res => {
         this.ui.ajaxLoading = false;
-        this.wordData = res.data;
+				this.wordData = res.data;
+				this.$emit('data-done');				
       });
     }
   },

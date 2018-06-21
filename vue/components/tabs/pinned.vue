@@ -26,12 +26,6 @@ export default {
   components: {
     PinnedFlashcard,
     Waterfall, WaterfallItem
-  },
-  activated() {
-    Waterfall.render();
-  },
-  updated() {
-    Waterfall.render();
   }
 }
 </script>

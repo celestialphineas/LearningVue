@@ -3,7 +3,7 @@
   <Waterfall
   :resizable="true">
     <WaterfallItem
-      v-for="word in words"
+      v-for="(word, index) in words"
       :width="300"
       :key="word">
       <DiscoverFlashcard :word="word" style="margin:8px;"/>
@@ -21,6 +21,7 @@ export default {
   name: 'Discover',
   data() {
     return {
+      count: 100,
       words: [],
       ui: {
         ajaxLoading: true,
@@ -33,10 +34,10 @@ export default {
     Waterfall, WaterfallItem
   },
   created() {
-    this.wordPromise = DataApi.getRandom(100);
+    this.wordPromise = DataApi.getRandom(this.count);
     if(this.wordPromise) {
-        this.ui.ajaxLoading = false,
-        this.wordPromise.then(res => {
+      this.wordPromise.then(res => {
+        this.ui.ajaxLoading = false;
         this.words = res.data;
       });
     } else {
