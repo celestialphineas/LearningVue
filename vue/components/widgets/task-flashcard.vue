@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height:148px;">
 		<md-card md-with-hover style="cursor:auto;margin:0;">
 			<md-card-header>
 				<div class="md-title">{{word}}</div>
@@ -56,7 +56,10 @@
 			</md-dialog>
 
 			<md-card-actions>
-				<md-button class="md-icon-button md-primary" style="position:absolute;right:0;top:0;margin:8px">
+				<md-button class="md-icon-button md-primary" v-if="this.pinned.indexOf(word)!==-1" style="position:absolute;right:0;top:0;margin:8px" @click="unpin">
+					<md-icon>add_location</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" v-else style="position:absolute;right:0;top:0;margin:8px" @click="pin">
 					<md-icon>add_location</md-icon>
 				</md-button>
 				<md-button @click="ui.showDefinitionDialog=true">
@@ -78,7 +81,8 @@
 </template>
 
 <script>
-import DataApi from '@/util/data-api.js';
+import DataApi from '@/util/data.api.js';
+import UserApi from '@/util/user.api.js';
 
 export default {
 	name: 'TaskFlashcard',
@@ -95,11 +99,15 @@ export default {
 				showDefinitionDialog: false,
 				seenDefinition: false,
 			},
+			pinned: [],
 			seenDefTimes: 0
 		}
 	},
-	components: {
-
+	beforeCreate() {
+		UserApi
+			.getPinned()
+			.then(data => this.pinned = data)
+			.catch(err => console.log(err));
 	},
 	created() {
 		var promise = DataApi.getWordData(this.word);
@@ -111,7 +119,17 @@ export default {
 			});
 		}
 	},
-	props: ['word']
+	props: ['word'],
+	methods: {
+		pin() {
+			this.pinned.push(this.word);
+			UserApi.pin(this.word);
+		},
+		unpin() {
+			this.pinned.splice(this.pinned.indexOf(this.word), 1);
+			UserApi.unpin(this.word);
+		}
+	}
 }
 </script>
 

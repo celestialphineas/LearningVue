@@ -42,7 +42,7 @@
 			</md-card-content>
 
 			<md-card-actions>
-				<md-button class="md-primary">
+				<md-button class="md-primary" @click="unpin">
 					<md-icon>add_location</md-icon>
 					<span>Unpin</span>
 				</md-button>
@@ -55,7 +55,8 @@
 </template>
 
 <script>
-import DataApi from "@/util/data-api.js";
+import DataApi from "@/util/data.api.js";
+import UserApi from '@/util/user.api.js';
 
 export default {
   name: "PinnedFlashcard",
@@ -69,10 +70,16 @@ export default {
       },
       ui: {
         ajaxLoading: true
-      }
+      },
+			pinned: [],
     };
   },
-  components: {},
+	beforeCreate() {
+		UserApi
+			.getPinned()
+			.then(data => this.pinned = data)
+			.catch(err => console.log(err));
+	},
   created() {
     var promise = DataApi.getWordData(this.word);
     if (promise) {
@@ -83,7 +90,18 @@ export default {
       });
     }
   },
-  props: ["word"]
+  props: ["word"],
+	methods: {
+		pin() {
+			this.pinned.push(this.word);
+			UserApi.pin(this.word);
+		},
+		unpin() {
+			this.pinned.splice(this.pinned.indexOf(this.word), 1);
+			this.$emit('unpinned', this.word);
+			UserApi.unpin(this.word);
+		}
+	}
 };
 </script>
 

@@ -53,8 +53,8 @@ function updateUser(email, obj) {
             .then(db => {
                 getCollection(db)
                     .updateOne({'email': email}, {$set: obj})
-                    .then(() => resolve(obj))
-                    .catch(err => reject(err));
+                    .then(() => { resolve(obj); db.close(); } )
+                    .catch(err => { reject(err); db.close(); });
             })
             .catch(err => reject(err));
     });
@@ -67,8 +67,8 @@ function insertNewUser(email, passMD5) {
             .then(db => {
                 getCollection(db)
                     .insertOne(createUserObj(email, passMD5))
-                    .then(() => resolve(createUserObj(email, passMD5)))
-                    .catch(err => reject(err));
+                    .then(() => { resolve(createUserObj(email, passMD5)); db.close(); })
+                    .catch(err => { reject(err); db.close(); });
             })
             .catch(err => reject(err));
     });
@@ -84,8 +84,9 @@ function userExists(email) {
                     .then(data => {
                         if(!data) resolve(false);
                         else resolve(true);
+                        db.close();
                     })
-                    .catch(err => reject(err));
+                    .catch(err => { reject(err); db.close(); });
             })
             .catch(err => reject(err));
     });
@@ -95,11 +96,11 @@ function validateUser(email) {
     return new Promise((resolve, reject) => {
         mongoClient
             .connect(config.mongoURL)
-            .then((db) => {
+            .then(db => {
                 getCollection(db)
                     .updateOne({'email': email}, {$set: {'validated': 'true'}})
-                    .then(() => resolve(email))
-                    .catch(err => reject(err))
+                    .then(() => { resolve(email); db.close(); })
+                    .catch(err => { reject(err); db.close(); })
             })
             .catch(err => reject(err));
     });
@@ -109,10 +110,11 @@ function getUserdata(email) {
     return new Promise((resolve, reject) => {
         mongoClient
             .connect(config.mongoURL)
-            .then((db) => {
+            .then(db => {
                 var data = getCollection(db).findOne({'email': email});
                 if(data) resolve(data);
                 else reject(data);
+                db.close();
             })
             .catch((err) => { throw err; });
     });

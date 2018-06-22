@@ -18,12 +18,13 @@ router.get('/:email', (req, res) => {
 });
 
 // Choose a course
-router.post('/:email/course/:course-entry', (req, res) => {
+router.post('/:email/course/:entry', (req, res) => {
     // TODO: Auth
     var email = req.params['email'];
-    var entry = req.params['course-entry'];
-    if(!(entry in data.courses))
+    var entry = req.params['entry'];
+    if(!(entry in data.courses)) {
         res.status(404).end();
+    }
     else {
         var updateObj = {
             course:         entry,
@@ -31,7 +32,7 @@ router.post('/:email/course/:course-entry', (req, res) => {
             courseEpoch:    new Date().getTime()
         };
         updateObj.wordsToLearn
-            = data.courses.getRandomOrder(updateObj.courseSeed);
+            = data.courses[entry].data.getRandomOrder(updateObj.courseSeed);
         // Write database
         db.updateUser(email, updateObj).then(() => res.status(200).end());
     }
@@ -53,9 +54,9 @@ router.post('/:email/pinned/:word', (req, res) => {
                 catch (e) { res.status(500).end(); }
                 db  .updateUser(email, { pinned: data.pinned })
                     .then(() => res.status(200).end())
-                    .catch( err => {res.status(500).end(); throw err;});
+                    .catch( err => {res.status(500).end(); console.log(err); });
             })
-            .catch(err => {res.status(500).end(); throw err;});
+            .catch(err => {res.status(500).end(); console.log(err); });
     }
 });
 
@@ -73,13 +74,25 @@ router.delete('/:email/pinned/:word', (req, res) => {
                     data.pinned.splice(data.pinned.indexOf(word), 1);
                     db  .updateUser(email, { pinned: data.pinned })
                         .then(() => res.status(200).end())
-                        .catch( err => {res.status(500).end(); throw err;});
+                        .catch( err => {res.status(500).end(); console.log(err); });
                 }
             } catch (e) {
-                throw e;
+                console.log(e);
             }
         })
-        .catch(err => {res.status(500).end(); throw err;});
+        .catch(err => {res.status(500).end(); console.log(err); });
 })
+
+// Change name
+// Change password MD5
+// Change words daily
+router.put('/:email/name', (req, res) => {
+    // Todo: Auth
+})
+
+// Validate user
+// Add word to learn
+// Upload experience vector
+// Update user learing status
 
 module.exports = router;

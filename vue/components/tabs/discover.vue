@@ -14,7 +14,7 @@
 
 <script>
 import DiscoverFlashcard from '../widgets/discover-flashcard.vue';
-import DataApi from '../../util/data-api.js';
+import DataApi from '../../util/data.api.js';
 import {Waterfall, WaterfallItem} from 'vue2-waterfall';
 
 const count = 20;
