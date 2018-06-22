@@ -1,21 +1,33 @@
 <template>
   <div>
-    <Waterfall
-    :resizable="true">
-    <WaterfallItem
-      v-for="word in words"
-      :width="300"
-      :key="word">
-      <PinnedFlashcard :word="word" style="margin:8px;" v-on:unpinned="unpinned"/>
-    </WaterfallItem>
-  </Waterfall>
+    <VueWaterfall
+      :line-gap="300"
+      :watch="words"
+      align="center"
+      style="overflow:visible;">
+      <!-- each component is wrapped by a waterfall slot -->
+      <VueWaterfallSlot
+        v-for="(word, index) in words"
+        :width="284"
+        :height="148"
+        :order="index"
+        :key="word"
+        move-class="item-move"
+      >
+        <PinnedFlashcard
+          :word="word"
+          style="margin:8px;"
+          @unpinned="unpinned"/>
+      </VueWaterfallSlot>
+    </VueWaterfall>
   </div>
 </template>
 
 <script>
 import PinnedFlashcard from '../widgets/pinned-flashcard.vue';
-import {Waterfall, WaterfallItem} from 'vue2-waterfall';
 import UserApi from '@/util/user.api';
+import VueWaterfall from 'vue-waterfall/lib/waterfall'
+import VueWaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 
 export default {
   name: 'Pinned',
@@ -29,7 +41,7 @@ export default {
   },
   components: {
     PinnedFlashcard,
-    Waterfall, WaterfallItem
+    VueWaterfall, VueWaterfallSlot
   },
   methods: {
     unpinned(word) {
@@ -40,4 +52,8 @@ export default {
 </script>
 
 <style>
+.item-move {
+  transition: all .5s cubic-bezier(.55,0,.1,1);
+  -webkit-transition: all .5s cubic-bezier(.55,0,.1,1);
+}
 </style>

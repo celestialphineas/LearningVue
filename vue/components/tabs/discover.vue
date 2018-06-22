@@ -6,7 +6,12 @@
       v-for="word in words"
       :width="300"
       :key="word">
-      <DiscoverFlashcard :word="word" style="margin:8px;"/>
+      <DiscoverFlashcard
+        :word="word"
+        :pinned="pinned.indexOf(word) !== -1"
+        @pinned="pin"
+        @unpinned="unpin"
+        style="margin:8px;"/>
     </WaterfallItem>
   </Waterfall>
   </div>
@@ -15,6 +20,7 @@
 <script>
 import DiscoverFlashcard from '../widgets/discover-flashcard.vue';
 import DataApi from '../../util/data.api.js';
+import UserApi from '../../util/user.api.js';
 import {Waterfall, WaterfallItem} from 'vue2-waterfall';
 
 const count = 20;
@@ -25,6 +31,7 @@ export default {
     return {
       count,
       words: [],
+      pinned: [],
       sizes: new Array(count).fill({width: 320, height: 50}),
       ui: {
         ajaxLoading: true,
@@ -38,6 +45,7 @@ export default {
   },
   created() {
     this.wordPromise = DataApi.getRandom(this.count);
+    UserApi.getPinned().then(data => this.pinned = data).catch(err => console.log(err));
     if(this.wordPromise) {
       this.wordPromise.then(res => {
         this.ui.ajaxLoading = false;
@@ -47,6 +55,14 @@ export default {
       this.ui.ajaxErr = true;
     }
   },
+  methods: {
+    pin(word) {
+      this.pinned.push(word);
+    },
+    unpin(word) {
+      this.pinned.splice(this.pinned.indexOf(word), 1);
+    }
+  }
 }
 </script>
 
