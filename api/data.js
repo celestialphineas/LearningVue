@@ -120,7 +120,8 @@ router.get('/course', (req, res) => {
         result.push({
             entry       : course,
             name        : courses[course].name,
-            description : courses[course].description
+            description : courses[course].description,
+            count       : courses[course].data.list.length
         });
     }
     var responseJSON = JSON.stringify(result);

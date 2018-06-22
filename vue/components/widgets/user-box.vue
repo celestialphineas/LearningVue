@@ -2,17 +2,17 @@
 <div class="userbox md-layout">
   <div class="md-layout-item md-size-25 avatar-container">
     <md-avatar class="md-avatar-icon md-large">
-      <md-ripple>{{getAbbr(user.username)}}</md-ripple>
+      <md-ripple>{{getAbbr(user.name)}}</md-ripple>
     </md-avatar>
   </div>
   <div class="md-layout-item">
     <div style="height:48px">
       <div id="username" class="md-title" v-show="!ui.editingUsername">
-        {{user.username}}
+        {{user.name}}
       </div>
       <md-field id="username-edit" v-show="ui.editingUsername">
         <label>Username</label>
-        <md-input v-model="user.username"></md-input>
+        <md-input v-model="user.name"></md-input>
       </md-field>
       <div id="edit-username">
         <md-button class="md-icon-button" style="line-height:48px" @click="ui.editingUsername = !ui.editingUsername">
@@ -55,13 +55,15 @@
 </template>
 
 <script>
+import UserApi from '@/util/user.api';
+
 export default {
   name: "UserBox",
   data() {
     return {
       user: {
-        username: '测试',
-        email: 'celestialphineas@outlook.com'
+        name: 'test',
+        email: 'test'
       },
       ui: {
         editingUsername:    false,
@@ -73,6 +75,12 @@ export default {
       password: '',
       newPassword: ''
     };
+  },
+  created() {
+    UserApi
+      .getUserBasic()
+      .then(res => this.user = res.data)
+      .catch(err => console.log(err));
   },
   methods: {
     getAbbr(str) {

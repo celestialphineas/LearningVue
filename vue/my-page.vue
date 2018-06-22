@@ -7,10 +7,8 @@
         <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
           <md-icon>menu</md-icon>
         </md-button>
-
         <span class="md-title">my memoria</span>
       </div>
-
       <div class="md-toolbar-section-end">
         <md-menu md-direction="bottom-end">
           <md-button class="md-icon-button" md-menu-trigger>
@@ -23,18 +21,20 @@
       </div>
     </div>
   </md-app-toolbar>
-
   <md-app-drawer :md-active.sync="menuVisible">
-    <SideNavigation/>
+    <side-navigation/>
   </md-app-drawer>
 
   <md-app-content class="md-elevation-0">
+
     <md-content class="md-elevation-2">
-      <UserBox/>
+      <user-box/>
     </md-content>
+
     <md-content class="md-elevation-2">
-      bbbb
+      <my-course v-bind:course="data.course" v-bind:words-left="data.wordsToLearn.length" @course-selected="courseSelected"/>
     </md-content>
+
   </md-app-content>
 </md-app>
 </div>
@@ -43,20 +43,40 @@
 <script>
 import SideNavigation from '@/components/widgets/side-navigation.vue';
 import UserBox from '@/components/widgets/user-box.vue';
+import MyCourse from '@/components/widgets/my-course.vue';
+import UserApi from '@/util/user.api';
 
 export default {
   name: 'My',
   data () {
     return {
+      data: {
+        course: '',
+        wordsToLearn: [],
+        wordsDaily: 20
+      },
       menuVisible: false
     }
   },
+  created () {
+    UserApi
+      .getUserData()
+      .then(res => this.data = res.data)
+      .catch(err => console.log(err));
+  },
   components: {
     SideNavigation,
-    UserBox
+    UserBox,
+    MyCourse
   },
   methods: {
-    
+    courseSelected(course) {
+      this.data.course = course.entry;
+      UserApi
+        .getUserData()
+        .then(res => this.data = res.data)
+        .catch(err => console.log(err));
+    }
   }
 }
 </script>

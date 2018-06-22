@@ -17,6 +17,18 @@ router.get('/:email', (req, res) => {
             res.header('Content-Type', 'application/text').status(404).send('404 Not found: ' + email));
 });
 
+// Get user info with email
+router.get('/:email/basic', (req, res) => {
+    var email   = req.params['email'];
+
+    db  .getUserdata(email)
+        .then(data => {
+            res.json({name:data.name, email:data.email});
+        })
+        .catch(() => 
+            res.header('Content-Type', 'application/text').status(404).send('404 Not found: ' + email));
+});
+
 // Choose a course
 router.post('/:email/course/:entry', (req, res) => {
     // TODO: Auth

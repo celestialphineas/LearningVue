@@ -13,6 +13,10 @@ function getUserData() {
 }
 
 export default {
+    getUserData,
+    getUserBasic() {
+        return Axios.get(config.getApiHost('api/user/' + email + '/basic'));
+    },
     getPinned() {   // Promise json data
         return new Promise((resolve, reject) => {
             getUserData().then((res) => {
@@ -25,5 +29,8 @@ export default {
     },
     unpin(word) {
         return Axios.delete(config.getApiHost('api/user/' + email + '/pinned/' + word));
+    },
+    selectCourse(entry) {
+        return Axios.post(config.getApiHost('api/user/' + email + '/course/' + entry));
     }
 }

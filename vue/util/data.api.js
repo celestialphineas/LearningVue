@@ -13,5 +13,8 @@ export default {
     getRandom(int) {
         if(typeof int !== 'number') return null;
         return Axios.get(config.getApiHost('api/data/random/') + int);
+    },
+    getCourses() {
+        return Axios.get(config.getApiHost('api/data/course'));
     }
 }
