@@ -32,7 +32,13 @@
     </md-content>
 
     <md-content class="md-elevation-2">
-      <my-course v-bind:course="data.course" v-bind:words-left="data.wordsToLearn.length" @course-selected="courseSelected"/>
+      <my-course
+        v-bind:course="data.course"
+        v-bind:words-left="data.wordsToLearn.length"
+        v-bind:words-daily="data.wordsDaily"
+        @course-selected="courseSelected"
+        @defined-submitted="definedSubmitted"
+        @daily-updated="dailyUpdated"/>
     </md-content>
 
   </md-app-content>
@@ -76,6 +82,16 @@ export default {
         .getUserData()
         .then(res => this.data = res.data)
         .catch(err => console.log(err));
+    },
+    definedSubmitted(words) {
+      this.data.wordsToLearn = words.concat(this.data.wordsToLearn);
+      UserApi
+        .getUserData()
+        .then(res => this.data = res.data)
+        .catch(err => console.log(err));
+    },
+    dailyUpdated(daily) {
+      this.data.wordsDaily = daily;
     }
   }
 }

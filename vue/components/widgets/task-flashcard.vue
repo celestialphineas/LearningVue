@@ -4,6 +4,7 @@
 			<md-card-header>
 				<div class="md-title">{{word}}</div>
 				<div class="md-subhead" v-if="wordData.ipa">/{{wordData.ipa}}/</div>
+				<div v-else>&nbsp;</div>
 			</md-card-header>
 
 			<md-card-content>

@@ -95,16 +95,61 @@ router.delete('/:email/pinned/:word', (req, res) => {
         .catch(err => {res.status(500).end(); console.log(err); });
 })
 
-// Change name
-// Change password MD5
+
+// Define a word (insert a word to the learning set)
+router.post('/:email/define', (req, res) => {
+    // TODO: Auth
+    var email = req.params['email'];
+    var words = req.body;
+    db  .getUserdata(email)
+        .then(data => {
+            var newToLearn;
+            try { newToLearn = words.concat(data.wordsToLearn); }
+            catch (e) { res.status(500).end(); }
+            db  .updateUser(email, { wordsToLearn: newToLearn })
+                .then(() => res.status(200).end())
+                .catch( err => {res.status(500).end(); console.log(err); });
+        })
+        .catch(err => {res.status(500).end(); console.log(err); });
+});
+
 // Change words daily
+router.put('/:email/words-daily', (req, res) => {
+    // TODO: Auth
+    var email = req.params['email'];
+    var newVal = req.body[0];
+    db  .getUserdata(email)
+        .then(data => {
+            try { data.wordsDaily = newVal; }
+            catch (e) { res.status(500).end(); }
+            db  .updateUser(email, { wordsDaily: data.wordsDaily })
+                .then(() => res.status(200).end())
+                .catch( err => {res.status(500).end(); console.log(err); });
+        })
+        .catch(err => {res.status(500).end(); console.log(err); });
+});
+
+// Change name
 router.put('/:email/name', (req, res) => {
-    // Todo: Auth
-})
+    // TODO: Auth
+    var email = req.params['email'];
+    var newVal = req.body[0];
+    db  .getUserdata(email)
+        .then(data => {
+            try { data.name = newVal; }
+            catch (e) { res.status(500).end(); }
+            db  .updateUser(email, { name: data.name })
+                .then(() => res.status(200).end())
+                .catch( err => {res.status(500).end(); console.log(err); });
+        })
+        .catch(err => {res.status(500).end(); console.log(err); });
+});
+
+// Change password MD5
 
 // Validate user
 // Add word to learn
 // Upload experience vector
-// Update user learing status
+// Update user learning status
 
 module.exports = router;

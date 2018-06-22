@@ -80,7 +80,7 @@ router.get('/word/:word', (req, res) => {
     if(data) {
         data['pronunciation'] = pronunciationData[word] ? pronunciationData[word] : null;
     } else {
-        data = null;
+        data = { en:null, zh:null, ipa:null, pronunciation:null };
     }
     var responseJSON = JSON.stringify(data);
     res .header('Content-Type', 'application/json')

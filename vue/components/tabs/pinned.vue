@@ -1,5 +1,11 @@
 <template>
   <div>
+    <md-empty-state
+      v-if="words.length === 0 && ui.showEmpty"
+      md-icon="add_location"
+      md-label="Pin Your Words"
+      md-description="Pin anything you want to record in your daily learning and “Discover”.">
+    </md-empty-state>
     <VueWaterfall
       :line-gap="300"
       :watch="words"
@@ -26,18 +32,29 @@
 <script>
 import PinnedFlashcard from '../widgets/pinned-flashcard.vue';
 import UserApi from '@/util/user.api';
-import VueWaterfall from 'vue-waterfall/lib/waterfall'
-import VueWaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
+import VueWaterfall from 'vue-waterfall/lib/waterfall';
+import VueWaterfallSlot from 'vue-waterfall/lib/waterfall-slot';
 
 export default {
   name: 'Pinned',
   data() {
     return {
-      words: []
+      words: [],
+      ui: {
+        showEmpty: false
+      }
     }
   },
   beforeCreate() {
-    UserApi.getPinned().then(data => this.words = data).catch(err => console.log(err));
+    UserApi.getPinned()
+      .then(data => {
+        this.words = data;
+        this.ui.showEmpty = true;
+      })
+      .catch(err => console.log(err));
+  },
+  created() {
+
   },
   components: {
     PinnedFlashcard,

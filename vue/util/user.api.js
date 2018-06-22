@@ -32,5 +32,14 @@ export default {
     },
     selectCourse(entry) {
         return Axios.post(config.getApiHost('api/user/' + email + '/course/' + entry));
+    },
+    defineWords(words) {
+        return Axios.post(config.getApiHost('api/user/' + email + '/define'), words);
+    },
+    changeWordsDaily(num) {
+        return Axios.put(config.getApiHost('api/user/' + email + '/words-daily'), [num]);
+    },
+    changeName(name) {
+        return Axios.put(config.getApiHost('api/user/' + email + '/name'), [name]);
     }
 }

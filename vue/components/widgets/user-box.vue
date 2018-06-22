@@ -15,7 +15,7 @@
         <md-input v-model="user.name"></md-input>
       </md-field>
       <div id="edit-username">
-        <md-button class="md-icon-button" style="line-height:48px" @click="ui.editingUsername = !ui.editingUsername">
+        <md-button class="md-icon-button" style="line-height:48px" @click="toggleEditName">
           <md-icon>{{ui.editingUsername ? 'check' : 'edit'}}</md-icon>
         </md-button>
       </div>
@@ -62,8 +62,8 @@ export default {
   data() {
     return {
       user: {
-        name: 'test',
-        email: 'test'
+        name: '',
+        email: ''
       },
       ui: {
         editingUsername:    false,
@@ -113,6 +113,15 @@ export default {
         return true;
       }
       return false;
+    },
+    toggleEditName() {
+      if(this.ui.editingUsername) {
+        UserApi
+          .changeName(this.user.name)
+          .then()
+          .catch(err => console.log(err));
+      }
+      this.ui.editingUsername = !this.ui.editingUsername
     },
     checkOldPassword() {
 
