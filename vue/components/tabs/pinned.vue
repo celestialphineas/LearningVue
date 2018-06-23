@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-width:1200px;margin-left:auto;margin-right:auto">
     <md-empty-state
       v-if="words.length === 0 && ui.showEmpty"
       md-icon="add_location"
@@ -10,7 +10,7 @@
       :line-gap="300"
       :watch="words"
       align="center"
-      style="overflow:visible;">
+      style="overflow:visible">
       <!-- each component is wrapped by a waterfall slot -->
       <VueWaterfallSlot
         v-for="(word, index) in words"

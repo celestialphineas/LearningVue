@@ -1,4 +1,4 @@
-const config    = require('../config/conf.server');
+const config    = require('../config/path.api');
 const db        = require('./db');
 const kryptos   = require('./kryptos');
 const express   = require('express');
@@ -85,6 +85,30 @@ router.post('/:email/newpass', (req, res) => {
             .catch(err => {res.status(500).end(); console.log(err);});
     })
     .catch(x => { res.status(500).end(); console.log(x); });
+});
+
+// Validate user
+router.get('/:email/validate/:hash', (req, res) => {
+    var email = req.params['email'];
+    var hash = req.params['hash'];
+    if(kryptos.getValidateHash(email) === hash) {
+        db.validateUser().then().catch(err => console.log(err));
+        return res.redirect('/validated.html');
+    } else {
+        return res.status(404).end();
+    }
+});
+
+// Create new user
+router.post('/:email/new', (req, res) => {
+    var email = req.params['email'];
+    var passMD5 = req.body[0];
+    
+    // TODO: send verification mail
+
+    db.insertNewUser(email, passMD5)
+        .then(() => res.status(200).end())
+        .catch(err => {res.status(500).end(); console.log(err); })
 });
 
 if(config.auth) router.auth = auth;

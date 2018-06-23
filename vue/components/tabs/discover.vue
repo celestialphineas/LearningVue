@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-width:1200px;margin-left:auto;margin-right:auto">
   <Waterfall
   :resizable="true">
     <WaterfallItem

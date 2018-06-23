@@ -62,12 +62,15 @@ function updateUser(email, obj) {
 
 function insertNewUser(email, passMD5) {
     return new Promise((resolve, reject) => {
+        var userObj = createUserObj(email, passMD5);
         mongoClient
             .connect(config.mongoURL)
             .then(db => {
                 getCollection(db)
-                    .insertOne(createUserObj(email, passMD5))
-                    .then(() => { resolve(createUserObj(email, passMD5)); db.close(); })
+                    .findOne({email})
+                    .upsert()
+                    .updateOne({email}, userObj)
+                    .then(() => { resolve(userObj); db.close(); })
                     .catch(err => { reject(err); db.close(); });
             })
             .catch(err => reject(err));

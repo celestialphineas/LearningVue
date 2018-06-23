@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="max-width:1200px;margin-left:auto;margin-right:auto">
   <md-empty-state
     v-if="ui.showEmpty"
     md-icon="directions_walk"

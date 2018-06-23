@@ -2,8 +2,6 @@ const auth              = require('./auth').auth;
 const arrange           = require('./arrange');
 const db                = require('./db');
 const data              = require('./data');
-const kryptos           = require('./kryptos');
-const config            = require('../config/path.api');
 const express           = require('express');
 const router            = express.Router();
 
@@ -221,16 +219,6 @@ router.put('/:email/learnt', (req, res) => {
             .catch(err => {res.status(500).end(); console.log(err);});
     })
     .catch(x => res.status(403).end());
-});
-
-// Validate user
-router.get('/:email/validate/:hash', (req, res) => {
-    var email = req.params['email'];
-    var hash = req.params['hash'];
-    if(kryptos.getValidateHash(email) === hash) {
-        db.validateUser().then().catch(err => console.log(err));
-        return res.redirect('/validated.html');
-    }
 });
 
 module.exports = router;

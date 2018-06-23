@@ -40,6 +40,17 @@ export default {
                 .catch(() => resolve(false));
         });
     },
+    // Promise a created new user
+    createUser(email, password) {
+        return new Promise((resolve, reject) => {
+            Axios.post(config.getApiHost('api/auth/' + email + '/new'), [md5(password)])
+                .then(res => {
+                    if(res.status === 200) resolve(true);
+                    else resolve(false);
+                })
+                .catch(() => resolve(false));
+        });
+    },
     // Sync
     getEmail()  {
         if(!window.localStorage.email) return null;
