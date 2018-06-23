@@ -1,6 +1,7 @@
 const bodyParser    = require('body-parser');
 const config        = require('../config/conf.server');
 const cors          = require('cors');
+const auth          = require('./auth');
 const data          = require('./data');
 const user          = require('./user');
 const express       = require('express');
@@ -20,5 +21,6 @@ app.use(cors());
 // Data API
 app.use(config.getApiPath('data'), data);
 app.use(config.getApiPath('user'), user);
+app.use(config.getApiPath('auth'), auth);
 
 module.exports = app;

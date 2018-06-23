@@ -9,22 +9,35 @@
       </div>
 
       <div class="form">
-        <md-field :class="{ 'md-invalid': errors.first('email') !== undefined }">
+        <md-field :class="{ 'md-invalid': (errors.first('email') !== undefined )||ui.emailErr}">
           <label>E-mail</label>
           <md-input type="text" name="email" v-model="login.email" v-validate="'required|email'" autofocus></md-input>
-          <span class="md-error" v-show="errors.has('email')">{{ errors.first('email') }}</span>
+          <span class="md-error" v-show="errors.has('email') || ui.emailErr">
+            {{ errors.has('email') ? errors.first('email') : 'User not registered' }}
+          </span>
         </md-field>
 
-        <md-field md-has-password :class="{ 'md-invalid': errors.first('password') !== undefined }">
+        <md-field md-has-password :class="{ 'md-invalid': (errors.first('password') !== undefined||!ui.validPass)&&login.email!=='' }">
           <label>Password</label>
           <md-input type="password" name="password" v-model="login.password" v-validate="'required'"></md-input>
-          <span class="md-error" v-show="errors.has('password')">{{ errors.first('password') }}</span>
+          <span class="md-error" v-show="errors.has('password')">
+            {{ errors.has('password') ? errors.first('password') : ui.passReason }}
+          </span>
         </md-field>
       </div>
 
       <div class="actions md-layout md-alignment-center-space-between">
-        <md-button class="md-raised md-secondary">New account</md-button>
-        <md-button class="md-raised md-primary" @click="auth">Log in</md-button>
+        <md-button
+          class="md-raised md-secondary"
+          :disabled="!ui.emailErr||errors.has('email')||!ui.validPass||login.password===''">
+            New account
+        </md-button>
+        <md-button
+          class="md-raised md-primary"
+          @click="auth"
+          :disabled="ui.emailErr||login.password===''">
+            Log in
+        </md-button>
       </div>
 
       <div class="bottom-link">
@@ -43,6 +56,8 @@
 
 <script>
 import img from '@/util/img';
+import AuthApi from '@/util/auth.api';
+import validPass from '@/util/valid-pass';
 
 export default {
   name: 'Login',
@@ -53,17 +68,47 @@ export default {
       login: {
         email: "",
         password: ""
+      },
+      ui: {
+        emailErr: false,
+        passwordCheck: false,
+        validPass: true,
+        passReason: ''
       }
     };
   },
+  watch: {
+    'login.email': function() {
+      if(!this.errors.has('email')) {
+        AuthApi.userExist(this.login.email)
+          .then(boo => {
+            this.ui.emailErr = !boo;
+            console.log(this.ui.emailErr);
+          });
+      }
+    },
+    'login.password': function() {
+      if(this.ui.emailErr) {
+        var {valid, reason} = validPass(this.login.password);
+        this.ui.validPass = valid;
+        this.ui.passReason = reason;
+      }
+      else this.ui.validPass = true;
+    }
+  },
   methods: {
     auth() {
-      // your code to login user
-      // this is only for example of loading
+      AuthApi.login(this.login.email, this.login.password)
+        .then(res => {
+          window.location.href='/';
+          this.loading = false;
+        })
+        .catch(err => {
+          this.ui.validPass = false;
+          this.ui.passReason = err;
+          this.loading = false;
+        })
       this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 5000);
     }
   }
 }

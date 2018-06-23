@@ -144,7 +144,7 @@ export default {
 <style scoped>
 .userbox {
   height: 140px;
-  padding: 20px;
+  padding: 16px 10px;
 }
 
 .avatar-container {
@@ -177,7 +177,8 @@ export default {
 #username {
   height: 48px;
   line-height: 48px;
-  max-width: 200px;
+  font-size: 14pt;
+  max-width: 70%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -194,7 +195,7 @@ export default {
   margin-top: -10px;
   margin-bottom: -15px;
   line-height: 48px;
-  max-width: 200px;
+  max-width: 70%;
   float: left;
 }
 </style>

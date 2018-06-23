@@ -76,7 +76,8 @@
 
       <md-dialog-content>
         Select course <b>{{ui.courseDialogData.name}}</b> to learn in future.
-        Note that this will override the course you are now learning.
+        Note that this will override the course you are now learning,
+        but your usage record will be reserved.
       </md-dialog-content>
 
       <md-dialog-actions>

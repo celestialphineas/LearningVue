@@ -57,18 +57,18 @@
 			</md-dialog>
 
 			<md-card-actions>
-				<md-button class="md-icon-button md-primary" v-if="this.pinned.indexOf(word)!==-1" style="position:absolute;right:0;top:0;margin:8px" @click="unpin">
+				<md-button class="md-icon-button md-primary" v-if="pinned.indexOf(word)!==-1" style="position:absolute;right:0;top:0;margin:8px" @click="unpin">
 					<md-icon>add_location</md-icon>
 				</md-button>
 				<md-button class="md-icon-button" v-else style="position:absolute;right:0;top:0;margin:8px" @click="pin">
 					<md-icon>add_location</md-icon>
 				</md-button>
-				<md-button @click="ui.showDefinitionDialog=true">
+				<md-button @click="ui.showDefinitionDialog = true">
 					<md-icon>sentiment_dissatisfied</md-icon>
 					<span v-if="!ui.seenDefinition">Obscure</span>
-					<span v-else>Still obsecure</span>
+					<span v-else>Still obscure</span>
 				</md-button>
-				<md-button class="md-primary">
+				<md-button class="md-primary" @click="familiar">
 					<md-icon v-if="!ui.seenDefinition">done</md-icon>
 					<md-icon v-else>sentiment_very_satisfied</md-icon>
 						<span>Familiar</span>
@@ -87,6 +87,7 @@ import UserApi from '@/util/user.api.js';
 
 export default {
 	name: 'TaskFlashcard',
+	props: ['word', 'pinned'],
 	data() {
 		return {
 			wordData: {
@@ -100,15 +101,8 @@ export default {
 				showDefinitionDialog: false,
 				seenDefinition: false,
 			},
-			pinned: [],
 			seenDefTimes: 0
 		}
-	},
-	beforeCreate() {
-		UserApi
-			.getPinned()
-			.then(data => this.pinned = data)
-			.catch(err => console.log(err));
 	},
 	created() {
 		var promise = DataApi.getWordData(this.word);
@@ -120,15 +114,18 @@ export default {
 			});
 		}
 	},
-	props: ['word'],
 	methods: {
 		pin() {
-			this.pinned.push(this.word);
 			UserApi.pin(this.word);
+			this.$emit('pinned', this.word);			
 		},
 		unpin() {
-			this.pinned.splice(this.pinned.indexOf(this.word), 1);
 			UserApi.unpin(this.word);
+			this.$emit('unpinned', this.word);
+		},
+		familiar() {
+			UserApi.learnt(this.word, this.seenDefTimes);
+			this.$emit('familiar', this.word);
 		}
 	}
 }

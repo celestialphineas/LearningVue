@@ -73,6 +73,7 @@ import UserApi from '@/util/user.api.js';
 
 export default {
   name: "TaskFlashcard",
+  props: ['word', 'pinned'],
   data() {
     return {
       wordData: {
@@ -96,7 +97,6 @@ export default {
 			});
     }
   },
-  props: ["word", "pinned"],
 	methods: {
 		pin() {
 			this.$emit('pinned', this.word);

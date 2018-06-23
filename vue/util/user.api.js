@@ -41,5 +41,11 @@ export default {
     },
     changeName(name) {
         return Axios.put(config.getApiHost('api/user/' + email + '/name'), [name]);
+    },
+    getToday() {
+        return Axios.get(config.getApiHost('api/user/' + email + '/today'));
+    },
+    learnt(word, times) {
+        return Axios.put(config.getApiHost('api/user/' + email + '/learnt'), [word, times]);
     }
 }
