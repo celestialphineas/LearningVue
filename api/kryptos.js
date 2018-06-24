@@ -1,12 +1,12 @@
 // Cryptography
 const crypto            = require('crypto');
 const config            = require('../config/conf.server');
-const pathConfig        = require('../config/path.api');
+const salt              = require('../config/salt');
 const jwt               = require('jsonwebtoken');
 const md5               = str => crypto.createHash('md5').update(str).digest('hex');
 
 function encryptPasswordMD5(passMD5) {
-    return md5(passMD5 + config.salt + passMD5);
+    return md5(passMD5 + salt + passMD5);
 }
 
 function encryptAccessToken(email, passMD5) {
@@ -14,20 +14,20 @@ function encryptAccessToken(email, passMD5) {
         name: email,
         pass: passMD5,
         iat: new Date().getTime()
-    }, config.salt);
+    }, salt);
 }
 
 function decryptAccessToken(token) {
-    try { return jwt.verify(token, config.salt); }
+    try { return jwt.verify(token, salt); }
     catch(err) { return null; }
 }
 
 function getValidateHash(email) {
-    return md5(email + config.salt);
+    return md5(email + salt);
 }
 
 function getValidateURL(email) {
-    return pathConfig
+    return config
         .getApiHost('/api/auth/' + email + '/validate/' + getValidateHash(email));
 }
 

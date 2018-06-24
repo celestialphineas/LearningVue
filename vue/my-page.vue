@@ -15,7 +15,7 @@
             <md-icon>more_vert</md-icon>
           </md-button>
           <md-menu-content>
-            <md-menu-item><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
+            <md-menu-item @click="logout"><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
           </md-menu-content>
         </md-menu> 
       </div>
@@ -51,6 +51,7 @@ import SideNavigation from '@/components/widgets/side-navigation.vue';
 import UserBox from '@/components/widgets/user-box.vue';
 import MyCourse from '@/components/widgets/my-course.vue';
 import UserApi from '@/util/user.api';
+import AuthApi from '@/util/auth.api';
 
 export default {
   name: 'My',
@@ -63,6 +64,10 @@ export default {
       },
       menuVisible: false
     }
+  },
+  beforeCreate() {
+    if(!window.localStorage.token)
+      window.location.href = '/login';
   },
   created () {
     UserApi
@@ -92,6 +97,9 @@ export default {
     },
     dailyUpdated(daily) {
       this.data.wordsDaily = daily;
+    },
+    logout() {
+      AuthApi.logout();
     }
   }
 }

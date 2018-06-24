@@ -1,8 +1,9 @@
-const config    = require('../config/path.api');
-const db        = require('./db');
-const kryptos   = require('./kryptos');
-const express   = require('express');
-const router    = express.Router();
+const config        = require('../config/conf.server');
+const db            = require('./db');
+const kryptos       = require('./kryptos');
+const express       = require('express');
+const nodemailer    = require('nodemailer');
+const router        = express.Router();
 
 function auth(req, res) {
     return new Promise((resolve, reject) => {
@@ -45,14 +46,16 @@ router.post('/:email', (req, res) => {
 
     db  .getUserdata(email)
         .then(data => {
-            var encrypted = kryptos.encryptPasswordMD5(md5);
-            var inDb = data.md5;
-            if(encrypted === inDb)
-                res.json({
-                    email,
-                    token: kryptos.encryptAccessToken(email, md5)
-                });
-            else res.status(204).end();
+            if(data && data.validated) {
+                var encrypted = kryptos.encryptPasswordMD5(md5);
+                var inDb = data.md5;
+                if(encrypted === inDb)
+                    res.json({
+                        email,
+                        token: kryptos.encryptAccessToken(email, md5)
+                    });
+                else res.status(204).end();
+            } else res.status(204).end();
         })
         .catch(err => {res.status(500).end(); console.log(err);});
 });
@@ -63,7 +66,7 @@ router.get('/:email', (req, res) => {
 
     db  .getUserdata(email)
         .then(data => {
-            if(data) res.status(200).end();
+            if(data && data.validated) res.status(200).end();
             else res.status(204).end();
         })
         .catch(() => {
@@ -79,7 +82,13 @@ router.post('/:email/newpass', (req, res) => {
         db  .getUserdata(email)
             .then(() => {
                 db  .updateUser(email, { md5: kryptos.encryptPasswordMD5(md5) })
-                    .then(() => res.status(200).end())
+                    .then(() => {
+                        res.json({
+                            email,
+                            token: kryptos.encryptAccessToken(email, md5)
+                        });
+                        return;
+                    })
                     .catch( err => { res.status(500).end(); console.log(err); } );
             })
             .catch(err => {res.status(500).end(); console.log(err);});
@@ -92,8 +101,8 @@ router.get('/:email/validate/:hash', (req, res) => {
     var email = req.params['email'];
     var hash = req.params['hash'];
     if(kryptos.getValidateHash(email) === hash) {
-        db.validateUser().then().catch(err => console.log(err));
-        return res.redirect('/validated.html');
+        db.validateUser(email).then().catch(err => console.log(err));
+        return res.redirect(config.getStaticPath('/validated.html?url=' + config.getVueHost('/login')));
     } else {
         return res.status(404).end();
     }
@@ -104,7 +113,21 @@ router.post('/:email/new', (req, res) => {
     var email = req.params['email'];
     var passMD5 = req.body[0];
     
-    // TODO: send verification mail
+    var url = kryptos.getValidateURL(email);
+    var transporter = nodemailer.createTransport(config.mailConfig);
+    transporter.sendMail({
+        from: 'memoria-no-reply@outlook.com',
+        to: email,
+        subject: 'Welcome to memoria',
+        text: 'Copy the URL below to activate your account: \n' + url
+    }, (err, info) => {
+        if(err) console.log(err);
+        else {
+            console.log('New validation email is sent.');
+            console.log(email);
+            console.log(url);
+        }
+    })
 
     db.insertNewUser(email, passMD5)
         .then(() => res.status(200).end())

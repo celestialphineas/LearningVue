@@ -8,8 +8,8 @@ const express       = require('express');
 const app           = express();
 
 // Static
-app.use('', express.static('../dist'));
-app.use('', express.static('../static'));
+app.use('', express.static(__dirname + '/../dist'));
+app.use('', express.static(__dirname + '/../static'));
 
 // Body parser
 app.use(bodyParser.urlencoded({extended: false}));

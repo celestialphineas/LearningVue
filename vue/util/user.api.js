@@ -1,9 +1,10 @@
 import Axios from 'axios';
-import config from '../../config/path.api';
+import config from '../../config/conf.server';
 import auth from './auth.api';
 
 var email = auth.getEmail();
 
+Axios.defaults.headers.delete['Authorization'] = auth.getAuth();
 Axios.defaults.headers.post['Authorization'] = auth.getAuth();
 Axios.defaults.headers.put['Authorization'] = auth.getAuth();
 Axios.defaults.headers.get['Authorization'] = auth.getAuth();

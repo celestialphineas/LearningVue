@@ -104,9 +104,9 @@ router.delete('/:email/pinned/:word', (req, res) => {
                     console.log(e);
                 }
             })
-            .catch(err => {res.status(500).end(); console.log(err); });
+            .catch(err => res.status(500).end());
     })
-    .catch(x => res.status(403).end());
+    .catch(err => {res.status(403).end();});
 });
 
 // Define a word (insert a word to the learning set)

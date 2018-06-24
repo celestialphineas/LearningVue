@@ -17,7 +17,7 @@
                 <md-icon>more_vert</md-icon>
               </md-button>
               <md-menu-content>
-                <md-menu-item><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
+                <md-menu-item @click="logout"><md-icon>exit_to_app</md-icon>Log out</md-menu-item>
               </md-menu-content>
             </md-menu> 
           </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import AuthApi from '@/util/auth.api';
 import SideNavigation from '@/components/widgets/side-navigation.vue';
 
 export default {
@@ -58,8 +59,17 @@ export default {
       }
     }
   },
+  beforeCreate() {
+    if(!window.localStorage.token)
+      window.location.href = '/login';
+  },
   components: {
     SideNavigation
+  },
+  methods: {
+    logout() {
+      AuthApi.logout();
+    }
   }
 }
 </script>

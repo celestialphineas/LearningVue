@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import config from '../../config/path.api';
+import config from '../../config/conf.server';
 
 export default {
     // Return a promise

@@ -6,14 +6,27 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Validated user</title>
 </head>
+<script>
+function getURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+</script>
 <body>
     <p>
         Your memoria has been successfully validated. <br>
         The browser will redirect to the login page automatically. <br>
-        If it failed to word, click on the link: <a href="/login">Login</a>
+        If it failed to word, click on the link: <a href="javascript:window.location.href=getURLParameter('url')">Login</a>
     </p>
 </body>
 <script>
-    setTimeout("window.location.href='/login'", 2000);
+    setTimeout("window.location.href=getURLParameter('url')", 2000);
 </script>
 </html>

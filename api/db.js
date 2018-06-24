@@ -60,17 +60,25 @@ function updateUser(email, obj) {
     });
 }
 
-function insertNewUser(email, passMD5) {
+function  insertNewUser(email, passMD5) {
     return new Promise((resolve, reject) => {
         var userObj = createUserObj(email, passMD5);
         mongoClient
             .connect(config.mongoURL)
             .then(db => {
                 getCollection(db)
-                    .findOne({email})
-                    .upsert()
-                    .updateOne({email}, userObj)
-                    .then(() => { resolve(userObj); db.close(); })
+                    .findOne({'email': email})
+                    .then(data => {
+                        if(data) {
+                            getCollection(db).updateOne({'email': email}, {$set: userObj})
+                                .then(() => { resolve(userObj); db.close(); })
+                                .catch(err => {console.log(err); db.close();});
+                        } else {
+                            getCollection(db).insertOne(userObj)
+                                .then(() => { resolve(userObj); db.close(); })
+                                .catch(err => {console.log(err); db.close();});
+                        }
+                    })
                     .catch(err => { reject(err); db.close(); });
             })
             .catch(err => reject(err));

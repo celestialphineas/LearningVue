@@ -23,6 +23,7 @@
     <div class="md-caption">{{user.email}}</div>
     <md-button class="md-primary" style="margin-left:-8px;" @click="ui.showDialog = true">Change Password</md-button>
   </div>
+
   <md-dialog :md-active.sync="ui.showDialog"  v-on:md-closed="closeChangePasswordDialog">
     <md-dialog-title>Change password</md-dialog-title>
     <md-dialog-content>
@@ -32,16 +33,19 @@
         <md-input v-model="password" type="password"></md-input>
       </md-field>
       <div style="text-align:right">
-        <span class="md-body-2" style="line-height:48px" v-show="ui.invalidOldPassword">Wrong password!</span>
-        <md-button class="md-raised md-primary" @click="checkOldPassword">Check password</md-button>
+        <transition name="fade">
+          <span class="md-body-2" style="line-height:48px" v-show="ui.invalidOldPassword">Wrong password!</span>
+        </transition>
+          <md-button class="md-raised md-primary" @click="checkOldPassword">Check password</md-button>
       </div>
       <div class="md-body-1" style="margin-top:20px" v-show="ui.showNewPassword">Enter your new password here:</div>
       <md-field v-show="ui.showNewPassword">
         <label>New password</label>
         <md-input v-model="newPassword" type="password"></md-input>
+        <span class="md-helper-text">Your new password should be at least 8-character long</span>
       </md-field>
       <div style="text-align:right" v-show="ui.showNewPassword">
-        <md-button class="md-raised md-primary" @click="commitNewPassword">Commit</md-button>
+        <md-button class="md-raised md-primary" @click="commitNewPassword" :disabled="ui.shortpass">Commit</md-button>
       </div>
     </md-dialog-content>
     <md-dialog-actions>
@@ -51,11 +55,18 @@
       <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
     </div>
   </md-dialog>
+
+  <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="ui.showSnack" md-persistent>
+    <span>{{ ui.newpassSucceeded ? 'Changing password succeeded' : 'Changing password failed' }}</span>
+    <md-button class="md-primary" @click="showSnackbar = false">Done</md-button>
+  </md-snackbar>
+
 </div>
 </template>
 
 <script>
 import UserApi from '@/util/user.api';
+import AuthApi from '@/util/auth.api';
 
 export default {
   name: "UserBox",
@@ -69,12 +80,21 @@ export default {
         editingUsername:    false,
         showDialog:         false,
         showNewPassword:    false,
+        showSnack:          false,
+        newpassSucceeded:   false,
         dialogLoading:      false,
         invalidOldPassword: false,
+        shortpass:          true,
       },
       password: '',
       newPassword: ''
     };
+  },
+  watch: {
+    newPassword() {
+      if(this.newPassword.length < 8) this.ui.shortpass = true;
+      else this.ui.shortpass = false;
+    }
   },
   created() {
     UserApi
@@ -124,10 +144,30 @@ export default {
       this.ui.editingUsername = !this.ui.editingUsername
     },
     checkOldPassword() {
-
+      AuthApi.login(AuthApi.getEmail(), this.password)
+        .then(res => {
+          this.ui.showNewPassword = true;
+          this.ui.invalidOldPassword = false;
+          this.ui.dialogLoading = false;
+          this.ui.newpassSucceeded = true;
+        })
+        .catch(() => {
+          this.ui.invalidOldPassword = true;
+          this.ui.dialogLoading = false;
+          this.ui.newpassSucceeded = false;
+        })
+        this.ui.dialogLoading = true;
     },
     commitNewPassword() {
-
+      AuthApi.newpass(AuthApi.getEmail(), this.newPassword)
+        .then(() => {
+          this.ui.showDialog = false;
+          this.ui.showSnack = true;
+        })
+        .catch(() => {
+          this.ui.showDialog = false;
+          this.ui.showSnack = true;
+        });
     },
     closeChangePasswordDialog() {
       this.password     = '';
@@ -197,5 +237,14 @@ export default {
   line-height: 48px;
   max-width: 70%;
   float: left;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: all .5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  margin-right: -20px;
 }
 </style>

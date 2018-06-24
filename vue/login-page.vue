@@ -29,7 +29,8 @@
       <div class="actions md-layout md-alignment-center-space-between">
         <md-button
           class="md-raised md-secondary"
-          :disabled="!ui.emailErr||errors.has('email')||!ui.validPass||login.password===''">
+          :disabled="!ui.emailErr||errors.has('email')||!ui.validPass||login.password===''"
+          @click="createAccount">
             New account
         </md-button>
         <md-button
@@ -51,6 +52,10 @@
 
     </md-content>
     <div class="background" />
+    <md-dialog-alert
+      :md-active.sync="ui.accountCreated"
+      md-title="Account created"
+      :md-content="'An activation email has been sent to your mailbox <strong>' + login.email + '</strong>.'" />
   </div>
 </template>
 
@@ -73,7 +78,8 @@ export default {
         emailErr: false,
         passwordCheck: false,
         validPass: true,
-        passReason: ''
+        passReason: '',
+        accountCreated: false
       }
     };
   },
@@ -109,6 +115,11 @@ export default {
           this.loading = false;
         })
       this.loading = true;
+    },
+    createAccount() {
+      AuthApi.createUser(this.login.email, this.login.password)
+        .then(() => this.ui.accountCreated = true)
+        .catch(err => console.log(err));
     }
   }
 }
