@@ -13,7 +13,7 @@
     <span class="md-list-item-text">Home</span>
     </md-list-item>
 
-    <md-list-item href="/my">
+    <md-list-item href="/my.html">
     <md-icon>account_circle</md-icon>
     <span class="md-list-item-text">My</span>
     </md-list-item>

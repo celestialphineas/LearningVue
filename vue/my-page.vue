@@ -71,10 +71,6 @@ export default {
       menuVisible: false
     }
   },
-  beforeCreate() {
-    if(!window.localStorage.token)
-      window.location.href = '/login';
-  },
   created () {
     UserApi
       .getUserData()

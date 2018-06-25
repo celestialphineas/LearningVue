@@ -17,7 +17,7 @@
           <div style="width:75%;display:inline-block">
             <md-progress-bar
               md-mode="buffer"
-              :md-value="learnt/total"/>
+              :md-value="learnt/total*100"/>
           </div>
           <div class="md-caption" style="width:20%;float:right;text-align:center">
             {{this.learnt}}/{{this.total}}
@@ -59,7 +59,7 @@ export default {
       this.records = result;
     },
     updateProgress() {
-      this.total = this.coursesObj[this.data.course].count;
+      if(this.coursesObj[this.data.course]) this.total = this.coursesObj[this.data.course].count;
       this.learnt = Math.max(this.total - this.data.wordsToLearn.length, 0);
     }
   },

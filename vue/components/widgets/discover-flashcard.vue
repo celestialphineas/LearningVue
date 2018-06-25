@@ -91,7 +91,9 @@ export default {
     var promise = DataApi.getWordData(this.word);
     if (promise) {
       promise.then(res => {
-        this.ui.ajaxLoading = false;
+				setTimeout(() => {
+					this.ui.ajaxLoading = false;
+				}, 500);
 				this.wordData = res.data;
 				this.$emit('data-done');
 			});

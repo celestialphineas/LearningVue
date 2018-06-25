@@ -59,10 +59,6 @@ export default {
       }
     }
   },
-  beforeCreate() {
-    if(!window.localStorage.token)
-      window.location.href = '/login';
-  },
   components: {
     SideNavigation
   },

@@ -5,7 +5,7 @@
     md-icon="directions_walk"
     md-label="Start with a Course"
     md-description="To start using memoria, you need to select a course">
-    <md-button class="md-primary md-raised" href="/my">Start now</md-button>
+    <md-button class="md-primary md-raised" href="/my.html">Start now</md-button>
   </md-empty-state>
   <md-empty-state
     v-if="ui.showAllDone"

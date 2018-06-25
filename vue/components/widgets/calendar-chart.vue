@@ -20,6 +20,8 @@ export default {
   },
   methods: {
     renderSVG() {
+      d3.select(this.$refs.calendar).html('');
+      d3.select(this.$refs['calendar-tags']).html('');
       var size = 12, margin = 3;
       var chart = d3.select(this.$refs.calendar)
         .attr("transform", "translate(" + 30 + "," + 25 + ")");
@@ -73,10 +75,14 @@ export default {
         .text(d => d)
         .attr('class', 'month-tag')
         .exit();
-    }
+      }
   },
   mounted() {
     this.renderSVG();
+  },
+  watch: {
+    year() { this.renderSVG() },
+    records() { this.renderSVG() }
   }
 }
 </script>
