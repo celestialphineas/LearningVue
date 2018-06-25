@@ -152,6 +152,7 @@ export default {
     selectCourse(course) {
       this.ui.courseDialogData = course;
       this.ui.showCourseDialog = true;
+      this.$emit('wordcount', this.coursesObj[course].count);
     },
     commitSelection(course) {
       UserApi

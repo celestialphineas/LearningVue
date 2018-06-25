@@ -33,16 +33,17 @@
 
     <md-content class="md-elevation-2">
       <my-course
-        v-bind:course="data.course"
-        v-bind:words-left="data.wordsToLearn.length"
-        v-bind:words-daily="data.wordsDaily"
+        :course="data.course"
+        :words-left="data.wordsToLearn.length"
+        :words-daily="data.wordsDaily"
         @course-selected="courseSelected"
         @defined-submitted="definedSubmitted"
         @daily-updated="dailyUpdated"/>
     </md-content>
 
     <md-content class="md-elevation-2">
-      <Visualization :data="data"/>
+      <Visualization
+        :data="data" />
     </md-content>
 
   </md-app-content>

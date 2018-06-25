@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg style="width:840px;height:130px;">
+    <svg style="width:840px;height:150px;">
       <g id="calendar-tags" ref="calendar-tags"></g>
       <g id="calendar" ref="calendar"></g>
     </svg>
