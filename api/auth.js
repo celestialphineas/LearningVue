@@ -102,7 +102,7 @@ router.get('/:email/validate/:hash', (req, res) => {
     var hash = req.params['hash'];
     if(kryptos.getValidateHash(email) === hash) {
         db.validateUser(email).then().catch(err => console.log(err));
-        return res.redirect(config.getStaticPath('/validated.html?url=' + config.getVueHost('/login')));
+        return res.redirect(config.getStaticPath('/validated.html?url=' + config.getVueHost('/login.html')));
     } else {
         return res.status(404).end();
     }
@@ -166,7 +166,7 @@ router.get('/:email/resetpass/:hash', (req, res) => {
         db  .getUserdata(email)
             .then(() => {
                 db  .updateUser(email, { md5: kryptos.encryptPasswordMD5(kryptos.md5('memoria2018')) })
-                    .then(() => { res.redirect(config.getStaticPath('/resetpass.html?url=' + config.getVueHost('/login'))); return; })
+                    .then(() => { res.redirect(config.getStaticPath('/resetpass.html?url=' + config.getVueHost('/login.html'))); return; })
                     .catch( err => { res.status(500).end(); console.log(err); } );
             })
             .catch(err => {res.status(500).end(); console.log(err);});
