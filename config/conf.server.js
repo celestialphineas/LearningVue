@@ -8,8 +8,8 @@ module.exports = {
     mongoPort       : 27017,
     getStaticPath   : path => ('/' + path).replace('//', '/'),
     getApiPath      : path => ('/api/' + path).replace('//', '/'),
-    getApiHost      : path => 'http://' + ('39.108.226.122:8081/' + path).replace('//', '/'),
-    getVueHost      : path => 'http://' + ('39.108.226.122:8081/' + path).replace('//', '/'),
+    getApiHost      : path => 'http://' + ('39.108.226.122:8642/' + path).replace('//', '/'),
+    getVueHost      : path => 'http://' + ('39.108.226.122:8642/' + path).replace('//', '/'),
     mailConfig      : {
         service: 'hotmail',
         auth: {
