@@ -1,9 +1,15 @@
 <template>
   <div>
     <md-list>
-      <md-subheader>Calendar</md-subheader>
+      <md-subheader>{{year}} Calendar</md-subheader>
       <md-list-item>
-        <calendar-chart style="overflow-x:scroll"></calendar-chart>
+        <div style="width:100%">
+          <calendar-chart
+            :year="year"
+            :records="records"
+            style="overflow-x:scroll;width:100%"
+          />
+        </div>
       </md-list-item>
     </md-list>
   </div>
@@ -13,9 +19,26 @@
 import CalendarChart from './calendar-chart.vue';
 
 export default {
+  name: 'Visualization',
   props: ['data'],
+  data() {
+    return {
+      year: new Date().getFullYear()
+    }
+  },
   components: {
     CalendarChart
+  },
+  computed: {
+    records() {
+      var experience = this.data.experience;
+      var result = [];
+      for(let i in experience) {
+        result.push([experience[i].time,
+          experience[i].done/experience[i].target]);
+      }
+      return result;
+    }
   }
 }
 </script>
