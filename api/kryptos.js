@@ -31,11 +31,22 @@ function getValidateURL(email) {
         .getApiHost('/api/auth/' + email + '/validate/' + getValidateHash(email));
 }
 
+function getResetHash(email) {
+    return md5(salt + email + salt);
+}
+
+function getResetURL(email) {
+    return config
+        .getApiHost('/api/auth/' + email + '/resetpass/' + getResetHash(email));
+}
+
 module.exports = {
     md5,
     encryptPasswordMD5,
     encryptAccessToken,
     decryptAccessToken,
     getValidateHash,
-    getValidateURL
+    getValidateURL,
+    getResetHash,
+    getResetURL
 }

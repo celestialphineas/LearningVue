@@ -134,6 +134,47 @@ router.post('/:email/new', (req, res) => {
         .catch(err => {res.status(500).end(); console.log(err); })
 });
 
+// Reset user request
+router.post('/:email/resetpass', (req, res) => {
+    var email = req.params['email'];
+    
+    var url = kryptos.getResetURL(email);
+    var transporter = nodemailer.createTransport(config.mailConfig);
+    transporter.sendMail({
+        from: 'memoria-no-reply@outlook.com',
+        to: email,
+        subject: 'Reset password',
+        text: 'You may reset your password to the default "memoria2018" by accessing the URL below: \n'
+            + url + '\nIf you are not trying to reset your password, please ignore this email.'
+            + 'Your usage data will be stored in safety. '
+    }, (err, info) => {
+        if(err) console.log(err);
+        else {
+            console.log('Password reset email is sent.');
+            console.log(email);
+            console.log(url);
+        }
+    });
+    res.status(200).end();
+});
+
+// Validate user
+router.get('/:email/resetpass/:hash', (req, res) => {
+    var email = req.params['email'];
+    var hash = req.params['hash'];
+    if(kryptos.getResetHash(email) === hash) {
+        db  .getUserdata(email)
+            .then(() => {
+                db  .updateUser(email, { md5: kryptos.encryptPasswordMD5(kryptos.md5('memoria2018')) })
+                    .then(() => { res.redirect(config.getStaticPath('/resetpass.html?url=' + config.getVueHost('/login'))); return; })
+                    .catch( err => { res.status(500).end(); console.log(err); } );
+            })
+            .catch(err => {res.status(500).end(); console.log(err);});
+    } else {
+        return res.status(404).end();
+    }
+});
+
 if(config.auth) router.auth = auth;
 else router.auth = fakeAuth;
 

@@ -58,7 +58,7 @@
 
   <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="ui.showSnack" md-persistent>
     <span>{{ ui.newpassSucceeded ? 'Changing password succeeded' : 'Changing password failed' }}</span>
-    <md-button class="md-primary" @click="showSnackbar = false">Done</md-button>
+    <md-button class="md-primary" @click="ui.showSnack = false">Done</md-button>
   </md-snackbar>
 
 </div>

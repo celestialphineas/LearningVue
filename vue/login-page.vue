@@ -42,8 +42,8 @@
       </div>
 
       <div class="bottom-link">
-        <a href="/resetpassword">Forgotten password?</a>&emsp;|&emsp;
-        <a href="https://github.com/celestialphineas/memoria">About memoria</a>
+        <a @click="ui.forgottenPass=true" style="cursor:pointer">Forgotten password?</a>&emsp;|&emsp;
+        <a href="https://github.com/celestialphineas/memoria">About</a>
       </div>
 
       <div class="loading-overlay" v-if="loading">
@@ -56,6 +56,30 @@
       :md-active.sync="ui.accountCreated"
       md-title="Account created"
       :md-content="'An activation email has been sent to your mailbox <strong>' + login.email + '</strong>.'" />
+
+    <md-dialog :md-active.sync="ui.forgottenPass">
+      <md-dialog-title>Reset your password</md-dialog-title>
+      <md-dialog-content style="max-width:400px">
+        <p>We will send you an email with a link, clicking on which will reset your password.</p>
+        <md-field :class="{ 'md-invalid': (errors.first('email') !== undefined )||ui.emailErr}">
+          <label>E-mail</label>
+          <md-input type="text" name="email" v-model="login.email" v-validate="'required|email'" autofocus></md-input>
+          <span class="md-error" v-show="errors.has('email') || ui.emailErr">
+            {{ errors.has('email') ? errors.first('email') : 'User not registered' }}
+          </span>
+        </md-field>
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="ui.forgottenPass=false">Cancel</md-button>
+        <md-button class="md-primary" @click="resetpass" :disabled="ui.emailErr||login.email===''">OK</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
+    <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="ui.showSnack" md-persistent>
+      <span>An email to reset your password has been sent.<br/>Please check your mailbox.</span>
+      <md-button class="md-primary" @click="ui.showSnack = false">Done</md-button>
+    </md-snackbar>
+    
   </div>
 </template>
 
@@ -79,7 +103,9 @@ export default {
         passwordCheck: false,
         validPass: true,
         passReason: '',
-        accountCreated: false
+        accountCreated: false,
+        forgottenPass: false,
+        showSnack: false
       }
     };
   },
@@ -89,7 +115,6 @@ export default {
         AuthApi.userExist(this.login.email)
           .then(boo => {
             this.ui.emailErr = !boo;
-            console.log(this.ui.emailErr);
           });
       }
     },
@@ -120,6 +145,16 @@ export default {
       AuthApi.createUser(this.login.email, this.login.password)
         .then(() => this.ui.accountCreated = true)
         .catch(err => console.log(err));
+    },
+    resetpass() {
+      AuthApi.resetpass(this.login.email)
+        .then(() => {
+          this.ui.forgottenPass = false;
+          this.ui.showSnack = true;
+        })
+        .catch(() => {
+          this.ui.forgottenPass = false;
+        });
     }
   }
 }
@@ -141,13 +176,18 @@ div {
   background-size: cover;
 }
 
+.md-content {
+  margin: 5px;
+}
+
 img {
+  width: 50%;
   max-width: 200px;
 }
 
 .centered-container .title {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .actions .md-button {
@@ -155,12 +195,12 @@ img {
 }
 
 .form {
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 
 .md-content {
   z-index: 1;
-  padding: 35px;
+  padding: 10px 25px 25px 25px;
   width: 100%;
   max-width: 400px;
   position: relative;

@@ -19,11 +19,11 @@
               <div class="md-body-1">{{course.name}}</div>
               <span class="md-caption">{{course.description}}</span>
             </div>
-            <span class="md-caption" style="position:absolute;right:80px;">{{course.count}}</span>
+            <span class="md-caption" style="position:absolute;right:40px;top:10px;">{{course.count}}</span>
           </md-list-item>
         </md-list>
 
-        <span class="md-caption" style="position:absolute;right:80px;" v-if="course in coursesObj"><span v-if="wordsLeft">{{wordsLeft}}/</span>{{coursesObj[course].count}}</span>
+        <span class="md-caption" style="position:absolute;right:40px;" v-if="course in coursesObj"><span v-if="wordsLeft">{{wordsLeft}}/</span>{{coursesObj[course].count}}</span>
       </md-list-item>
 
       <md-list-item md-expand :md-expanded.sync="ui.expandUserDefined">
@@ -34,7 +34,7 @@
         </div>
 
         <md-list slot="md-expand">
-          <md-list-item style="padding:0 20px;">
+          <md-list-item style="padding:0 5px;">
             <md-field>
               <label>Input your words here</label>
               <md-input v-model="userDefinedWord"></md-input>

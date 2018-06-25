@@ -75,6 +75,13 @@ export default {
                 .catch(err => { reject(err); })
         });
     },
+    resetpass(email) {
+        return new Promise((resolve, reject) => {
+            Axios.post(config.getApiHost('api/auth/' + email + '/resetpass'))
+                .then(res => resolve(res))
+                .catch(err => { console.log(err); reject(err) });
+        })
+    },
     logout() {
         window.localStorage.clear();
         window.location.href = '/login';
