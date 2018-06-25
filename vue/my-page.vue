@@ -1,7 +1,7 @@
 <template>
 <div class="page-container">
 <md-app md-waterfall md-mode="overlap">
-  <md-app-toolbar class="md-primary md-large">
+  <md-app-toolbar class="md-primary md-large" style="position:fixed">
     <div class="md-toolbar-row">
       <div class="md-toolbar-section-start">
         <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
