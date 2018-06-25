@@ -41,6 +41,10 @@
         @daily-updated="dailyUpdated"/>
     </md-content>
 
+    <md-content class="md-elevation-2">
+      <Visualization :data="data"/>
+    </md-content>
+
   </md-app-content>
 </md-app>
 </div>
@@ -50,6 +54,7 @@
 import SideNavigation from '@/components/widgets/side-navigation.vue';
 import UserBox from '@/components/widgets/user-box.vue';
 import MyCourse from '@/components/widgets/my-course.vue';
+import Visualization from '@/components/widgets/visualization.vue';
 import UserApi from '@/util/user.api';
 import AuthApi from '@/util/auth.api';
 
@@ -78,7 +83,8 @@ export default {
   components: {
     SideNavigation,
     UserBox,
-    MyCourse
+    MyCourse,
+    Visualization
   },
   methods: {
     courseSelected(course) {
