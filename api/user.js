@@ -170,7 +170,7 @@ router.get('/:email/today', (req, res) => {
         var email = req.params['email'];
         var roundDate = timestamp => {
             timestamp -= timestamp % (24 * 60 * 60 * 1000);
-            timestamp += new Date().getTimezoneOffset() * 60 * 1000;
+            // timestamp += new Date().getTimezoneOffset() * 60 * 1000;
             return timestamp;
         };
         db  .getUserdata(email)

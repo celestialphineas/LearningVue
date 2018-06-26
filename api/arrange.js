@@ -5,7 +5,7 @@ const CONTINUED = 1, NEWREC = 0;
 function insertToExperience(data, word, times) {
     var roundDate = timestamp => {
         timestamp -= timestamp % (24 * 60 * 60 * 1000);
-        timestamp += new Date().getTimezoneOffset() * 60 * 1000;
+        // timestamp += new Date().getTimezoneOffset() * 60 * 1000;
         return timestamp;
     };
     try {
