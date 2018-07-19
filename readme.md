@@ -6,6 +6,12 @@
 
 memoria is a web app for you to memorize words better. 
 
+![](scrshots/0.png)
+
+![](scrshots/1.png)
+
+![](scrshots/2.png)
+
 ## Dependencies
 
 - Vue.js
@@ -59,7 +65,7 @@ module.exports = {
         service: 'hotmail',
         auth: {
             user: 'memoria-no-reply@outlook.com',
-            pass: 'MemoriaNoReply2018'
+            pass: 'memoriaN0Reply'
         }
     }
 }
